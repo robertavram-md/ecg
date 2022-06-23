@@ -50,7 +50,7 @@ def save(example, idx):
     files are saved in the same place as the raw data.
     """
     np.save(os.path.join(DATA, idx), example[0])
-    with open(os.path.join(DATA, "{}.pkl".format(idx)), 'w') as fid:
+    with open(os.path.join(DATA, f"{idx}.pkl"), 'w') as fid:
         pickle.dump(example[1], fid)
 
 if __name__ == "__main__":
@@ -59,4 +59,4 @@ if __name__ == "__main__":
     for idx in idxs:
         example = extract(idx)
         save(example, idx)
-        print("Example {}".format(idx))
+        print(f"Example {idx}")
