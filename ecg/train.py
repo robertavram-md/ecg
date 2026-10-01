@@ -17,7 +17,7 @@ import util
 MAX_EPOCHS = 100
 
 def make_save_dir(dirname, experiment_name):
-    start_time = str(int(time.time())) + '-' + str(random.randrange(1000))
+    start_time = f'{int(time.time())}-{random.randrange(1000)}'
     save_dir = os.path.join(dirname, experiment_name, start_time)
     if not os.path.exists(save_dir):
         os.makedirs(save_dir)
@@ -35,8 +35,8 @@ def train(args, params):
     dev = load.load_dataset(params['dev'])
     print("Building preprocessor...")
     preproc = load.Preproc(*train)
-    print("Training size: " + str(len(train[0])) + " examples.")
-    print("Dev size: " + str(len(dev[0])) + " examples.")
+    print(f"Training size: {len(train[0])} examples.")
+    print(f"Dev size: {len(dev[0])} examples.")
 
 
     save_dir = make_save_dir(params['save_dir'], args.experiment)

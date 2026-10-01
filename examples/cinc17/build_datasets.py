@@ -17,7 +17,7 @@ def load_all(data_path):
 
     dataset = []
     for record, label in tqdm.tqdm(records):
-        ecg_file = os.path.join(data_path, record + ".mat")
+        ecg_file = os.path.join(data_path, f"{record}.mat")
         ecg_file = os.path.abspath(ecg_file)
         ecg = load_ecg_mat(ecg_file)
         num_labels = ecg.shape[0] / STEP

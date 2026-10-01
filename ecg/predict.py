@@ -14,9 +14,7 @@ def predict(data_json, model_path):
     x, y = preproc.process(*dataset)
 
     model = keras.models.load_model(model_path)
-    probs = model.predict(x, verbose=1)
-
-    return probs
+    return model.predict(x, verbose=1)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()

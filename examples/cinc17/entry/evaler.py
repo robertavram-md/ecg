@@ -9,7 +9,7 @@ import network
 import util
 
 def predict(record):
-    ecg = load.load_ecg(record +".mat")
+    ecg = load.load_ecg(f"{record}.mat")
     preproc = util.load(".")
     x = preproc.process_x([ecg])
 

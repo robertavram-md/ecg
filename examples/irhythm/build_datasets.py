@@ -17,21 +17,20 @@ RELABEL = {"NSR": "SINUS", "SUDDEN_BRADY": "AVB",
 def get_all_records(path, blacklist=set()):
     records = []
     for root, dirnames, filenames in os.walk(path):
-        for filename in fnmatch.filter(filenames, '*.ecg'):
-            if patient_id(filename) not in blacklist:
-                records.append(os.path.abspath(
-                    os.path.join(root, filename)))
+        records.extend(
+            os.path.abspath(os.path.join(root, filename))
+            for filename in fnmatch.filter(filenames, '*.ecg')
+            if patient_id(filename) not in blacklist
+        )
+
     return records
 
 def patient_id(record):
     return os.path.basename(record).split("_")[0]
 
 def round_to_step(n, step):
-    diff = (n - 1) % step 
-    if diff < (step / 2):
-        return n - diff
-    else:
-        return n + (step - diff)
+    diff = (n - 1) % step
+    return n - diff if diff < (step / 2) else n + (step - diff)
 
 def load_episodes(record, epi_ext):
 
@@ -84,12 +83,12 @@ def construct_dataset(records, epi_ext='.episodes.json'):
     return data
 
 def stratify(records, dev_frac):
-    pids = list(set(patient_id(record) for record in records))
+    pids = list({patient_id(record) for record in records})
     random.shuffle(pids)
     cut = int(len(pids) * dev_frac)
     dev_pids = set(pids[:cut])
-    train = [r for r in records if patient_id(r) not in dev_pids] 
-    dev = [r for r in records if patient_id(r) in dev_pids] 
+    train = [r for r in records if patient_id(r) not in dev_pids]
+    dev = [r for r in records if patient_id(r) in dev_pids]
     return train, dev 
 
 def load_train(data_path, dev_frac, blacklist_paths):
@@ -147,5 +146,5 @@ if __name__ == "__main__":
     test = load_test(test_dir, '_grp*.episodes.json')
     make_json("test.json", test)
     for i in range(6):
-        test = load_test(test_dir, "_rev{}.episodes.json".format(i))
-        make_json("test_rev{}.json".format(i), test)
+        test = load_test(test_dir, f"_rev{i}.episodes.json")
+        make_json(f"test_rev{i}.json", test)
